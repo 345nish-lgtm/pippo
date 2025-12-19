@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>For Pippo ❤️</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+
+body{
+    height:100vh;
+    background:linear-gradient(to bottom,#fdecef,#fff);
+    font-family:Georgia,serif;
+    overflow:hidden;
+}
+
+/* HEART BACKGROUND */
+#heart-bg{
+    position:fixed;
+    inset:0;
+    z-index:0;
+    overflow:hidden;
+}
+
+.bg-heart{
+    position:absolute;
+    bottom:-30%;
+    opacity:.35;
+    animation:floatUp linear infinite;
+}
+
+@keyframes floatUp{
+    from{transform:translateY(0) scale(1)}
+    to{transform:translateY(-150vh) scale(1.3)}
+}
+
+/* START SCREEN */
+#start{
+    position:fixed;
+    inset:0;
+    background:#000;
+    color:#fff;
+    z-index:5;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    cursor:pointer;
+}
+
+/* CONTENT */
+#content{
+    position:relative;
+    z-index:2;
+    height:100vh;
+    display:none;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+}
+
+.container{
+    max-width:700px;
+    padding:40px;
+}
+
+h1{font-size:44px;color:#ff4b7d;margin-bottom:20px}
+
+.text{
+    font-size:24px;
+    line-height:2;
+    min-height:200px;
+}
+
+.question{
+    font-size:34px;
+    margin-top:20px;
+    color:#ff4b7d;
+    display:none;
+}
+
+.buttons{
+    margin-top:30px;
+    display:none;
+    gap:20px;
+    justify-content:center;
+}
+
+/* BUTTONS */
+button{
+    padding:14px 34px;
+    font-size:22px;
+    border:none;
+    border-radius:50px;
+    cursor:pointer;
+    transition:all .4s ease;
+}
+
+#yesBtn{
+    background:linear-gradient(135deg,#ff4b7d,#ff7aa2);
+    color:white;
+}
+
+#noBtn{
+    background:#ddd;
+    color:#444;
+}
+
+/* FULLSCREEN YES */
+.fullscreen-yes{
+    position:fixed;
+    inset:0;
+    font-size:48px !important;
+    border-radius:0 !important;
+    z-index:20;
+}
+
+/* POPUP */
+#popup{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.85);
+    z-index:30;
+    display:none;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+}
+
+#popup h1{
+    font-size:56px;
+    color:#ff6fa5;
+}
+</style>
+</head>
+
+<body>
+
+<div id="heart-bg"></div>
+
+<div id="start">
+    <h1>For Pippo ❤️</h1>
+    <p>Tap to begin</p>
+</div>
+
+<audio id="music" loop>
+    <source src="https://cdn.pixabay.com/download/audio/2023/03/16/audio_6e58c0dc1a.mp3" type="audio/mp3">
+</audio>
+
+<div id="content">
+    <div class="container">
+        <h1>PIPPO ❤️</h1>
+        <div class="text" id="text"></div>
+        <div class="question" id="question">Do you love me?</div>
+        <div class="buttons" id="buttons">
+            <button id="yesBtn">Yes ❤️</button>
+            <button id="noBtn">No 🙈</button>
+        </div>
+    </div>
+</div>
+
+<div id="popup">
+    <div>
+        <h1>I Love You Too ❤️</h1>
+        <p style="font-size:26px;color:white;">Forever & Always</p>
+    </div>
+</div>
+
+<script>
+/* HEARTS */
+const heartBg=document.getElementById("heart-bg");
+function createHeart(){
+    const h=document.createElement("div");
+    h.className="bg-heart";
+    h.innerHTML="❤️";
+    h.style.fontSize=(Math.random()*120+120)+"px";
+    h.style.left=Math.random()*100+"vw";
+    h.style.animationDuration=(Math.random()*20+30)+"s";
+    heartBg.appendChild(h);
+    setTimeout(()=>h.remove(),60000);
+}
+setInterval(createHeart,1800);
+
+/* START */
+const start=document.getElementById("start");
+const content=document.getElementById("content");
+const music=document.getElementById("music");
+
+start.onclick=()=>{
+    music.volume=.7;
+    music.play();
+    start.style.display="none";
+    content.style.display="flex";
+    typeText();
+};
+
+/* TYPEWRITER */
+const lines=[
+    "I love you very much, Pippo.",
+    "Not loudly. Not dramatically.",
+    "But softly, deeply, honestly.",
+    "In every moment, every heartbeat.",
+    "So I just want to ask you one thing…"
+];
+let i=0,j=0;
+const textDiv=document.getElementById("text");
+
+function typeText(){
+    if(i<lines.length){
+        if(j<lines[i].length){
+            textDiv.innerHTML+=lines[i][j++];
+            setTimeout(typeText,70);
+        }else{
+            textDiv.innerHTML+="<br><br>";
+            j=0;i++;
+            setTimeout(typeText,700);
+        }
+    }else{
+        document.getElementById("question").style.display="block";
+        document.getElementById("buttons").style.display="flex";
+    }
+}
+
+/* YES / NO LOGIC */
+let noCount=0;
+const yesBtn=document.getElementById("yesBtn");
+const noBtn=document.getElementById("noBtn");
+
+noBtn.onclick=()=>{
+    noCount++;
+
+    yesBtn.style.transform=`scale(${1 + noCount * 0.3})`;
+
+    if(noCount>=3){
+        noBtn.style.display="none";
+        yesBtn.classList.add("fullscreen-yes");
+        yesBtn.innerText="YES ❤️";
+    }
+};
+
+yesBtn.onclick=()=>{
+    document.getElementById("popup").style.display="flex";
+};
+</script>
+
+</body>
+</html>
